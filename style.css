@@ -1,120 +1,148 @@
+/* General Styles */
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #e0e8f0; /* Light blue-gray background */
+    font-family: 'Roboto', sans-serif;
+    background-color: #f0f4f8;
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
 }
 
-.container {
-    background: #fefefe; /* White background */
-    padding: 30px;
-    border-radius: 20px; /* More rounded corners */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow */
-    width: 400px; /* Restrict width for a compact look */
+/* App Container */
+.app-container {
+    width: 100%;
+    max-width: 600px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
+/* Header */
+header {
     text-align: center;
-    font-size: 1.8rem; /* Slightly bigger font for the header */
-    color: #4a4a4a; /* Darker text */
-    font-weight: bold;
 }
 
-form {
-    display: flex;
-    flex-direction: column; /* Stack inputs vertically */
-    gap: 10px;
+header h1 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+}
+
+header p {
+    font-size: 1rem;
+    color: #7f8c8d;
+    margin-top: -10px;
+}
+
+/* Task Form */
+.task-input-area {
     margin-bottom: 20px;
 }
 
-input[type="text"], input[type="date"] {
-    padding: 12px;
-    border-radius: 10px; /* Rounded corners for inputs */
-    border: 1px solid #ccd0d5; /* Soft gray border */
-    background-color: #f0f3f8; /* Light background */
+input[type="text"], textarea, input[type="date"] {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: 1px solid #bdc3c7;
+    background-color: #ecf0f1;
     font-size: 1rem;
+    box-sizing: border-box;
+}
+
+input[type="text"]:focus, textarea:focus, input[type="date"]:focus {
     outline: none;
+    border-color: #3498db;
 }
 
-input[type="text"]:focus, input[type="date"]:focus {
-    border: 1px solid #a8b3c2; /* Slightly darker on focus */
-}
-
-button {
-    padding: 12px;
-    background-color: #5a9ad1; /* Soft blue */
-    color: white;
+.add-task-btn {
+    width: 100%;
+    padding: 15px;
     border: none;
-    border-radius: 20px; /* Fully rounded buttons */
+    border-radius: 10px;
+    background-color: #3498db;
+    color: #ffffff;
+    font-size: 1.2rem;
     cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s ease;
 }
 
-button:hover {
-    background-color: #507a9d; /* Darker blue on hover */
+.add-task-btn:hover {
+    background-color: #2980b9;
+}
+
+/* Task List Styles */
+#task-list-container {
+    margin-top: 20px;
 }
 
 ul {
-    list-style-type: none;
+    list-style: none;
     padding: 0;
-    margin: 0;
 }
 
 li {
-    background-color: #f0f3f8;
-    padding: 12px;
-    border-radius: 15px; /* Rounded corners */
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
-    font-size: 1rem;
+    margin-bottom: 15px;
+}
+
+li .task-content {
+    flex: 1;
+}
+
+li .task-content h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #2c3e50;
+}
+
+li .task-content p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
+
+li .task-content small {
+    color: #95a5a6;
+}
+
+li .task-actions {
+    display: flex;
+    gap: 10px;
+}
+
+li .task-actions button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+li .task-actions .delete-btn {
+    background-color: #e74c3c;
+    color: white;
+}
+
+li .task-actions .complete-btn {
+    background-color: #2ecc71;
+    color: white;
 }
 
 li.completed {
+    background-color: #ecf9f1;
     text-decoration: line-through;
-    background-color: #c9e1d4; /* Softer green for completed tasks */
 }
 
-li button {
-    background-color: #ef5050; /* Red for delete */
-    color: white;
-    border: none;
-    border-radius: 12px;
-    padding: 8px 12px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+/* Hover and focus effects for task buttons */
+.task-actions button:hover {
+    opacity: 0.8;
 }
-
-li button:hover {
-    background-color: #d04040;
-}
-/* Additional styling for the new description field */
-textarea {
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid #ccd0d5;
-    background-color: #f0f3f8;
-    font-size: 1rem;
-    width: 100%;
-    height: 60px;
-    resize: none; /* Prevent resizing */
-    outline: none;
-    margin-bottom: 10px;
-}
-textarea:focus {
-    border: 1px solid #a8b3c2;
-}
-
-/* Style for the task actions container */
-.task-actions {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-}
-
