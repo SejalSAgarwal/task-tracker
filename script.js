@@ -1,90 +1,100 @@
-/**
- * Task Class: Represents a single task.
- * @param {string} name - The name of the task.
- * @param {string} description - A brief description of the task.
- * @param {string} dueDate - The due date for the task.
- */
-class Task {
-    constructor(name, description, dueDate) {
-        this.name = name;
-        this.description = description;
-        this.dueDate = dueDate;
-        this.isCompleted = false;
-    }
+// Select DOM elements
+const taskForm = document.getElementById('task-form');
+const taskList = document.getElementById('task-list');
 
-    /**
-     * Toggles the completion status of the task.
-     */
-    toggleComplete() {
-        this.isCompleted = !this.isCompleted;
-    }
+// Load tasks from local storage when the page loads
+document.addEventListener('DOMContentLoaded', loadTasks);
+
+// Handle form submission
+taskForm.addEventListener('submit', addTask);
+
+// Add Task Function
+function addTask(e) {
+    e.preventDefault();
+
+    // Get task details
+    const taskName = document.getElementById('task').value;
+    const taskDesc = document.getElementById('task-desc').value;
+    const dueDate = document.getElementById('due-date').value;
+
+    // Create task object
+    const taskObj = {
+        id: Date.now(),
+        taskName: taskName,
+        taskDesc: taskDesc,
+        dueDate: dueDate,
+        completed: false
+    };
+
+    // Save task to local storage
+    saveTask(taskObj);
+
+    // Render task on the page
+    renderTask(taskObj);
+
+    // Clear form fields
+    taskForm.reset();
 }
 
-/**
- * TaskManager Class: Manages the list of tasks and their operations.
- */
-class TaskManager {
-    constructor() {
-        this.tasks = [];
-    }
+// Save task to local storage
+function saveTask(task) {
+    let tasks = getTasksFromLocalStorage();
+    tasks.push(task);
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
 
-    /**
-     * Adds a new task to the task list.
-     * @param {string} name - Task name.
-     * @param {string} description - Task description.
-     * @param {string} dueDate - Task due date.
-     */
-    addTask(name, description, dueDate) {
-        const task = new Task(name, description, dueDate);
-        this.tasks.push(task);
-        this.renderTasks();
-    }
+// Get tasks from local storage
+function getTasksFromLocalStorage() {
+    return localStorage.getItem('tasks') ? JSON.parse(localStorage.getItem('tasks')) : [];
+}
 
-    /**
-     * Removes a task from the list by index.
-     * @param {number} index - Index of the task to remove.
-     */
-    removeTask(index) {
-        this.tasks.splice(index, 1);
-        this.renderTasks();
-    }
+// Load tasks from local storage
+function loadTasks() {
+    const tasks = getTasksFromLocalStorage();
+    tasks.forEach(task => renderTask(task));
+}
 
-    /**
-     * Toggles the completion status of a task by index.
-     * @param {number} index - Index of the task to toggle.
-     */
-    toggleTaskCompletion(index) {
-        this.tasks[index].toggleComplete();
-        this.renderTasks();
-    }
+// Render task on the page
+function renderTask(task) {
+    const li = document.createElement('li');
+    li.className = task.completed ? 'completed' : '';
+    li.innerHTML = `
+        <div class="task-content">
+            <h3>${task.taskName}</h3>
+            <p>${task.taskDesc}</p>
+            <small>Due: ${task.dueDate}</small>
+        </div>
+        <div class="task-actions">
+            <button class="complete-btn" onclick="toggleComplete(${task.id})">${task.completed ? 'Unmark' : 'Complete'}</button>
+            <button class="delete-btn" onclick="deleteTask(${task.id})">Delete</button>
+        </div>
+    `;
+    taskList.appendChild(li);
+}
 
-    /**
-     * Renders the list of tasks to the DOM.
-     */
-    renderTasks() {
-        const taskList = document.getElementById('task-list');
-        taskList.innerHTML = '';
+// Delete task from local storage
+function deleteTask(id) {
+    let tasks = getTasksFromLocalStorage();
+    tasks = tasks.filter(task => task.id !== id);
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    reloadTaskList();
+}
 
-        this.tasks.forEach((task, index) => {
-            const taskItem = document.createElement('li');
-            taskItem.className = task.isCompleted ? 'completed' : '';
+// Toggle task completion
+function toggleComplete(id) {
+    let tasks = getTasksFromLocalStorage();
+    tasks = tasks.map(task => {
+        if (task.id === id) {
+            task.completed = !task.completed;
+        }
+        return task;
+    });
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    reloadTaskList();
+}
 
-            const taskContent = `
-                <div class="task-content">
-                    <h3>${task.name}</h3>
-                    <p>${task.description}</p>
-                    <small>Due: ${task.dueDate}</small>
-                </div>
-                <div class="task-actions">
-                    <button class="complete-btn" onclick="taskManager.toggleTaskCompletion(${index})">
-                        ${task.isCompleted ? 'Undo' : 'Complete'}
-                    </button>
-                    <button class="delete-btn" onclick="taskManager.removeTask(${index})">Delete</button>
-                </div>
-            `;
-
-            taskItem.innerHTML = taskContent;
-            taskList.appendChild(taskItem);
-        });
-    }
+// Reload task list to reflect changes
+function reloadTaskList() {
+    taskList.innerHTML = '';
+    loadTasks();
 }
