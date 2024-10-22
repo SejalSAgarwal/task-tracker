@@ -84,4 +84,17 @@ function deleteTask(id) {
 function toggleComplete(id) {
     let tasks = getTasksFromLocalStorage();
     tasks = tasks.map(task => {
-        if (task.id === id)
+        if (task.id === id) {
+            task.completed = !task.completed;
+        }
+        return task;
+    });
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    reloadTaskList();
+}
+
+// Reload task list to reflect changes
+function reloadTaskList() {
+    taskList.innerHTML = '';
+    loadTasks();
+}
