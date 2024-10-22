@@ -8,13 +8,17 @@
 </head>
 <body>
     <div class="container">
-        <h1>Task Tracker</h1>
+        <h1>Add Task</h1>
+
+        <!-- Task Form -->
         <form id="task-form">
-            <input type="text" id="task" placeholder="Add your new task..." required>
+            <input type="text" id="task" placeholder="Task name..." required>
+            <textarea id="task-desc" placeholder="Task description..." required></textarea>
             <input type="date" id="due-date" required>
-            <button type="submit">Add Task</button>
+            <button type="submit" class="add-task-btn">Add Task</button>
         </form>
 
+        <!-- Task List -->
         <ul id="task-list"></ul>
     </div>
 
