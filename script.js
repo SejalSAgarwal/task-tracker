@@ -17,12 +17,6 @@ function addTask(e) {
     const taskDesc = document.getElementById('task-desc').value;
     const dueDate = document.getElementById('due-date').value;
 
-    // Ensure all fields are filled before creating the task
-    if (!taskName || !taskDesc || !dueDate) {
-        alert("Please fill in all fields.");
-        return;
-    }
-
     // Create task object
     const taskObj = {
         id: Date.now(),
@@ -64,7 +58,7 @@ function loadTasks() {
 function renderTask(task) {
     const li = document.createElement('li');
     li.className = task.completed ? 'completed' : '';
-    li.innerHTML = `
+    li.innerHTML = 
         <div class="task-content">
             <h3>${task.taskName}</h3>
             <p>${task.taskDesc}</p>
@@ -74,8 +68,8 @@ function renderTask(task) {
             <button class="complete-btn" onclick="toggleComplete(${task.id})">${task.completed ? 'Unmark' : 'Complete'}</button>
             <button class="delete-btn" onclick="deleteTask(${task.id})">Delete</button>
         </div>
-    `;
-    taskList.appendChild(li);  // Ensure task is appended to taskList
+    ;
+    taskList.appendChild(li);
 }
 
 // Delete task from local storage
@@ -101,6 +95,6 @@ function toggleComplete(id) {
 
 // Reload task list to reflect changes
 function reloadTaskList() {
-    taskList.innerHTML = ''; // Clear the task list
-    loadTasks(); // Re-load tasks
+    taskList.innerHTML = '';
+    loadTasks();
 }
