@@ -6,56 +6,60 @@ const taskList = document.getElementById('task-list');
 document.addEventListener('DOMContentLoaded', loadTasks);
 
 // Handle form submission
-taskForm.addEventListener('submit', addTask);
+taskForm.addEventListener('submit', handleTaskSubmission);
 
-// Add Task Function
-function addTask(e) {
-    e.preventDefault();
+// Handle Task Submission
+function handleTaskSubmission(event) {
+    event.preventDefault();
 
-    // Get task details
+    const taskObj = createTaskObject();
+    if (taskObj) {
+        saveTaskToLocalStorage(taskObj);
+        renderTaskOnPage(taskObj);
+        taskForm.reset();
+    }
+}
+
+// Create Task Object
+function createTaskObject() {
     const taskName = document.getElementById('task').value;
     const taskDesc = document.getElementById('task-desc').value;
     const dueDate = document.getElementById('due-date').value;
 
-    // Create task object
-    const taskObj = {
+    if (taskName === '' || dueDate === '') {
+        alert('Task name and due date are required');
+        return null;
+    }
+
+    return {
         id: Date.now(),
         taskName: taskName,
         taskDesc: taskDesc,
         dueDate: dueDate,
         completed: false
     };
-
-    // Save task to local storage
-    saveTask(taskObj);
-
-    // Render task on the page
-    renderTask(taskObj);
-
-    // Clear form fields
-    taskForm.reset();
 }
 
 // Save task to local storage
-function saveTask(task) {
-    let tasks = getTasksFromLocalStorage();
+function saveTaskToLocalStorage(task) {
+    const tasks = getTasksFromLocalStorage();
     tasks.push(task);
     localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
 // Get tasks from local storage
 function getTasksFromLocalStorage() {
-    return localStorage.getItem('tasks') ? JSON.parse(localStorage.getItem('tasks')) : [];
+    return JSON.parse(localStorage.getItem('tasks')) || [];
 }
 
-// Load tasks from local storage
+// Load tasks from local storage and render on page
 function loadTasks() {
     const tasks = getTasksFromLocalStorage();
-    tasks.forEach(task => renderTask(task));
+    tasks.forEach(task => renderTaskOnPage(task));
 }
 
 // Render task on the page
-function renderTask(task) {
+function renderTaskOnPage(task) {
     const li = document.createElement('li');
     li.className = task.completed ? 'completed' : '';
     li.innerHTML = `
@@ -65,36 +69,34 @@ function renderTask(task) {
             <small>Due: ${task.dueDate}</small>
         </div>
         <div class="task-actions">
-            <button class="complete-btn" onclick="toggleComplete(${task.id})">${task.completed ? 'Unmark' : 'Complete'}</button>
-            <button class="delete-btn" onclick="deleteTask(${task.id})">Delete</button>
+            <button class="complete-btn" onclick="toggleTaskCompletion(${task.id})">
+                ${task.completed ? 'Unmark' : 'Complete'}
+            </button>
+            <button class="delete-btn" onclick="removeTask(${task.id})">Delete</button>
         </div>
     `;
     taskList.appendChild(li);
 }
 
-// Delete task from local storage
-function deleteTask(id) {
-    let tasks = getTasksFromLocalStorage();
-    tasks = tasks.filter(task => task.id !== id);
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-    reloadTaskList();
+// Delete task from local storage and refresh UI
+function removeTask(taskId) {
+    const updatedTasks = getTasksFromLocalStorage().filter(task => task.id !== taskId);
+    localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+    refreshTaskList();
 }
 
-// Toggle task completion
-function toggleComplete(id) {
-    let tasks = getTasksFromLocalStorage();
-    tasks = tasks.map(task => {
-        if (task.id === id) {
-            task.completed = !task.completed;
-        }
+// Toggle task completion status and refresh UI
+function toggleTaskCompletion(taskId) {
+    const updatedTasks = getTasksFromLocalStorage().map(task => {
+        if (task.id === taskId) task.completed = !task.completed;
         return task;
     });
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-    reloadTaskList();
+    localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+    refreshTaskList();
 }
 
-// Reload task list to reflect changes
-function reloadTaskList() {
+// Clear the task list and reload tasks
+function refreshTaskList() {
     taskList.innerHTML = '';
     loadTasks();
 }
