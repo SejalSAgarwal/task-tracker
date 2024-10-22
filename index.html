@@ -3,34 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Tracker</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to the CSS file -->
 </head>
 <body>
-    <div class="overlay"></div>
-    <div class="app-container">
-        <header>
-            <h1>Task Tracker</h1>
-            <p>Stay on top of your tasks!</p>
-        </header>
-
-        <!-- Task Form -->
-        <div class="task-input-area">
-            <form id="task-form">
-                <input type="text" id="task" placeholder="Task Name" required>
-                <textarea id="task-desc" placeholder="Task Description" required></textarea>
+    <div class="container">
+        <h1>Task Manager</h1>
+        <form id="task-form">
+            <div class="form-group">
+                <label for="task">Task Name</label>
+                <input type="text" id="task" placeholder="Enter task name" required>
+            </div>
+            <div class="form-group">
+                <label for="task-desc">Task Description</label>
+                <textarea id="task-desc" placeholder="Enter task description" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="due-date">Due Date</label>
                 <input type="date" id="due-date" required>
-                <button type="submit" class="add-task-btn">+ Add Task</button>
-            </form>
-        </div>
+            </div>
+            <button type="submit" class="submit-btn">Add Task</button>
+        </form>
 
-        <!-- Task List -->
-        <div id="task-list-container">
-            <ul id="task-list"></ul>
-        </div>
+        <ul id="task-list"></ul> <!-- This is where tasks will be listed -->
     </div>
 
-    <script src="taskManager.js"></script>
-    <script src="script.js"></script>
+    <script src="script.js"></script> <!-- Link to the JavaScript file -->
 </body>
 </html>
